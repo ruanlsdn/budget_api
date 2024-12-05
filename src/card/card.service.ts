@@ -62,7 +62,7 @@ export class CardService {
   }
 
   async findByPeriod(userId: string, initialDate: Date, finalDate: Date) {
-    return await this.prisma.card.findMany({
+    const result = await this.prisma.card.findMany({
       where: {
         userId,
         checked: true,
@@ -87,6 +87,12 @@ export class CardService {
         createdAt: true,
       },
       orderBy: { createdAt: 'desc' },
+    });
+
+    return result.sort((a, b) => {
+      const totalQuantityA = a.orders.reduce((sum, order) => sum + order.productQuantity, 0);
+      const totalQuantityB = b.orders.reduce((sum, order) => sum + order.productQuantity, 0);
+      return totalQuantityB - totalQuantityA;
     });
   }
 
