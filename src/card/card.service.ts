@@ -90,8 +90,17 @@ export class CardService {
     });
 
     return result.sort((a, b) => {
+      const descriptionA = a.orders[0].product.description.toLowerCase();
+      const descriptionB = b.orders[0].product.description.toLowerCase();
+      const descriptionComparison = descriptionA.localeCompare(descriptionB);
+  
+      if (descriptionComparison !== 0) {
+        return descriptionComparison;
+      }
+  
       const totalQuantityA = a.orders.reduce((sum, order) => sum + order.productQuantity, 0);
       const totalQuantityB = b.orders.reduce((sum, order) => sum + order.productQuantity, 0);
+  
       return totalQuantityB - totalQuantityA;
     });
   }
